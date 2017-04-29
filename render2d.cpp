@@ -1,4 +1,4 @@
-#include "inc/sdl_app.hpp"
+#include "inc/render2d.hpp"
 
 std::string title = "Sneak Simulator 2017";
 

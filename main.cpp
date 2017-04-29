@@ -49,25 +49,15 @@ int GameWrapper::MainLoop(){
     uint32_t frame_start;
      int16_t sleep;
     uint16_t frame_ms = (1000.0 / FPS_MAX);
-    //uint16_t fps = 0, frame_last = SDL_GetTicks();
     // Fixed time step is used since the game should be so simple that anything but microwaves should be able to run it at 30/60FPS
     while (valid){
         frame_start = SDL_GetTicks();
-        // Get events and send them to event handlers
-        PollEvents();
-        // Update field state
-        // Render field and HUD
-        render.Render();
-        //frame_d = SDL_GetTicks() - frame_start;         // Difference in time between last and current frames
+        PollEvents();       // Get events and send them to event handlers
+                            // Update field state
+        render.Render();    // Render field and HUD
         sleep = frame_start + frame_ms - SDL_GetTicks();
         if (sleep < 0)
             sleep = 0;
-        /*if (SDL_GetTicks() - frame_last > 1000){
-            frame_last = SDL_GetTicks();
-            title = patch::to_string(fps);
-            render.WindowSetTitle(title);
-            fps = 0;
-        } else {fps++;}*/
         SDL_Delay(sleep);
     }
     return 0;
