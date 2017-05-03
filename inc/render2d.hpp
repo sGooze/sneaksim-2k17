@@ -3,15 +3,16 @@
 #pragma once
 
 #include "common.hpp"
-
+#include "render_element.hpp"
+/*
 class Texture{
 private:
     SDL_Texture *tex = NULL;
     string path;
     uint16_t x, y;
-    /*uint8_t alpha_mod;
-    SDL_BlendMode blend_mode;                            All accessed through SDL_Get.. & SDL_Set.. functions, not stored in this class
-    uint8_t color_mod_r, color_mod_g, color_mod_b;*/
+    // uint8_t alpha_mod;
+    // SDL_BlendMode blend_mode;                            All accessed through SDL_Get.. & SDL_Set.. functions, not stored in this class
+    // uint8_t color_mod_r, color_mod_g, color_mod_b;
 public:
     Texture(const std::string& path);
     Texture(uint32_t format, int access, int w, int h);
@@ -29,6 +30,7 @@ public:
     bool Add(const std::string& name);          // Loads new texture from the list. Throws a warning and loads default placeholder on failure.
     Texture& Get(const std::string& name);      // Returns texture from the list. If it's not loaded, loads it first.
 };
+*/
 
 class Render2D{
 private:
@@ -75,4 +77,5 @@ public:
     void RenderString(const std::string& str, const uint16_t start_x, const uint16_t start_y);
 
     void Render();
+    void HandleEvent(SDL_Event& event);
 };

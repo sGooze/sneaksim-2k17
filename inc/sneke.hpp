@@ -4,8 +4,12 @@
 #pragma once
 
 #include "common.hpp"
+#include "render_element.hpp"
 #include <list>
 #include <forward_list>
+
+// TODO: REMOVE RenderElement && RenderQueue
+//       Rendering is handled directly by Renderer, which has two more functions: render basic object, and render sneke
 
 namespace Sneke_SM{
 
@@ -22,6 +26,7 @@ namespace Sneke_SM{
         virtual ~object(){};
         uint16_t GetX(){return x;}
         uint16_t GetY(){return y;}
+        RenderElement Render(){return RenderElement(x, y, 1, 1, color);}
     };
 
     class wall : public object{
@@ -38,8 +43,9 @@ namespace Sneke_SM{
 
     typedef wall sneke_body;
 
-    class sneke : public wall{
+    class sneke{
     private:
+        uint16_t x, y;
         uint16_t length = 5;
         DIRECTION movement_dir = DIR_LEFT;
         std::forward_list<sneke_body*> body;

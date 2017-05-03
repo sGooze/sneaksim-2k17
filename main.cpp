@@ -55,6 +55,8 @@ int GameWrapper::MainLoop(){
         PollEvents();       // Get events and send them to event handlers
                             // Update field state
         render.Render();    // Render field and HUD
+        // Pointer to object list is passed to the renderer, who then uses a set of functions to render objects to the field texture
+        // RenderCommandList
         sleep = frame_start + frame_ms - SDL_GetTicks();
         if (sleep < 0)
             sleep = 0;

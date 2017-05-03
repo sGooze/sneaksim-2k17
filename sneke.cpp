@@ -23,11 +23,9 @@ Sneke_SM::object* Sneke_SM::object_list::getObject(const int& cx, const int& cy)
 
 ////******* S N E K E *******////
 
-Sneke_SM::sneke::sneke(int cx, int cy) : wall(cx, cy){
+Sneke_SM::sneke::sneke(int cx, int cy) : x(cx), y(cy){
     // Construct snake body
     // At the start of the game snake body extends to the right of snake's head in a straight line
-    color.r = color.b = 0x00;
-    color.g = color.a = 0xFF;
     for (int i = 0; i < length; i++){
         sneke_body *sn = new sneke_body(cx + i, cy);
         body.push_front(sn);
@@ -36,7 +34,7 @@ Sneke_SM::sneke::sneke(int cx, int cy) : wall(cx, cy){
 
 Sneke_SM::sneke::~sneke(){
     // Since sneke's body was constructed from pointers, it needs to be manually deleted
-    for ( auto it = body.begin(); it != body.end(); ++it )
+    for ( auto it = body.begin(); it != body.end(); it++ )
         delete *it;
 }
 

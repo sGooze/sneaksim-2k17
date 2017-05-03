@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1493297064 source:d:\codeblocks-16.01-mingw\sneke-sm\main.cpp
+1493823090 source:d:\codeblocks-16.01-mingw\sneke-sm\main.cpp
 	"inc/sdl_app.hpp"
 
 1493285071 d:\codeblocks-16.01-mingw\sneke-sm\inc\common.hpp
@@ -672,19 +672,29 @@
 1493150143 source:d:\dev\our vidya\sneke-sm\render2d.cpp
 	"inc/sdl_app.hpp"
 
-1493302005 source:d:\codeblocks-16.01-mingw\sneke-sm\render2d.cpp
-	"inc/sdl_app.hpp"
+1493464713 source:d:\codeblocks-16.01-mingw\sneke-sm\render2d.cpp
+	"inc/render2d.hpp"
 
-1493302081 d:\codeblocks-16.01-mingw\sneke-sm\inc\sdl_app.hpp
+1493464719 d:\codeblocks-16.01-mingw\sneke-sm\inc\sdl_app.hpp
 	<SDL2/SDL.h>
 	"common.hpp"
 	"sneke.hpp"
+	"render2d.hpp"
 
-1493296319 d:\codeblocks-16.01-mingw\sneke-sm\inc\sneke.hpp
+1493824469 d:\codeblocks-16.01-mingw\sneke-sm\inc\sneke.hpp
 	"common.hpp"
+	"render_element.hpp"
 	<list>
 	<forward_list>
 
 1493296266 source:d:\codeblocks-16.01-mingw\sneke-sm\sneke.cpp
 	"inc/sneke.hpp"
+
+1493823128 d:\codeblocks-16.01-mingw\sneke-sm\inc\render2d.hpp
+	"common.hpp"
+	"render_element.hpp"
+
+1493824523 d:\codeblocks-16.01-mingw\sneke-sm\inc\render_element.hpp
+	"common.hpp"
+	<vector>
 
