@@ -42,7 +42,6 @@
 		</Compiler>
 		<Unit filename="inc/common.hpp" />
 		<Unit filename="inc/render2d.hpp" />
-		<Unit filename="inc/render_element.hpp" />
 		<Unit filename="inc/sdl_app.hpp" />
 		<Unit filename="inc/sneke.hpp" />
 		<Unit filename="main.cpp" />

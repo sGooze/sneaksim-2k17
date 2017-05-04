@@ -121,7 +121,27 @@ void Render2D::RenderString(const std::string& str, const uint16_t start_x, cons
     }
 }
 
-void Render2D::Render(){
+// // // // // // // // // // // // // // // //
+// R E N D E R // G A M E  // O B J E C T S  //
+// // // // // // // // // // // // // // // //
+
+void Render2D::RenderObject(Sneke_SM::object* obj){
+    SDL_Color& col = obj->GetColor();
+    SDL_SetRenderDrawColor(renderer, col.r, col.g, col.b, col.a);
+    //SDL_Rect& rect = obj.GetBBox();
+    //SDL_RenderFillRect(renderer, &rect);
+    SDL_RenderFillRect(renderer, &obj->GetBBox());
+}
+
+void Render2D::RenderSneak(Sneke_SM::sneke* sneak){
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0, 0, 0xFF);
+    RenderDrawPoint(sneak->GetX(), sneak->GetY());
+    auto body = sneak->GetBody();
+    for (auto it = body.cbegin(); it != body.cend(); it++)
+        RenderObject((*it));
+}
+
+void Render2D::Render(Sneke_SM::object_list* objects, Sneke_SM::sneke* player){
     // Clear rendering space
     SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0x00, 0xFF);
     SDL_RenderClear(renderer);
@@ -131,13 +151,11 @@ void Render2D::Render(){
             SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
             SDL_RenderClear(renderer);
             // Render all objects to the field texture
-            // Draw texture borders (test)
-            SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-            RenderDrawLine(0, 0, 63, 0);
-            RenderDrawLine(0, 0, 0, 63);
-            RenderDrawLine(0, 63, 63, 63);
-            RenderDrawLine(63, 0, 63, 63);
-            RenderDrawLine(0, 0, 63, 63);
+            if (objects != NULL){
+
+            }
+            if (player != NULL)
+                RenderSneak(player);
 
             SDL_SetRenderTarget(renderer, NULL);
             //SDL_RenderSetViewport(renderer, &viewport_field);
@@ -152,7 +170,7 @@ void Render2D::Render(){
 
             SDL_RenderCopy(renderer, texField, NULL, &viewport_field);
             RenderString(title, 0, 0);
-            RenderString("i only plan to type\n whatever i want", 256, 256);
+            //RenderString("i only plan to type\n whatever i want", 256, 256);
 
             SDL_RenderSetScale(renderer, scale, 1);
         }

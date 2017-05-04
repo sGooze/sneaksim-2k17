@@ -45,6 +45,8 @@ int GameWrapper::MainLoop(){
         return -1;
     field gamefield(64, 64);
     render.InitFieldTexture(gamefield.GetX(), gamefield.GetY());
+    auto field_obj = gamefield.GetObjectListPtr();
+    auto playa_obj = gamefield.GetPlayerObjectPtr();
 
     uint32_t frame_start;
      int16_t sleep;
@@ -54,7 +56,7 @@ int GameWrapper::MainLoop(){
         frame_start = SDL_GetTicks();
         PollEvents();       // Get events and send them to event handlers
                             // Update field state
-        render.Render();    // Render field and HUD
+        render.Render(field_obj, playa_obj);    // Render field and HUD
         // Pointer to object list is passed to the renderer, who then uses a set of functions to render objects to the field texture
         // RenderCommandList
         sleep = frame_start + frame_ms - SDL_GetTicks();

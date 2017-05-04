@@ -3,7 +3,7 @@
 #pragma once
 
 #include "common.hpp"
-#include "render_element.hpp"
+#include "sneke.hpp"
 /*
 class Texture{
 private:
@@ -37,7 +37,7 @@ private:
     SDL_Renderer *renderer = NULL;
     SDL_Window *window = NULL;
     uint16_t w, h;
-    uint8_t scale = 1;
+    uint8_t scale = 5;
     bool borderless = false;
     bool fullscreen = false;
     std::string win_title = "Sneak";
@@ -76,6 +76,10 @@ public:
     void RenderFillRect(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
     void RenderString(const std::string& str, const uint16_t start_x, const uint16_t start_y);
 
-    void Render();
+    // Drawing functions for game objects
+    void RenderObject(Sneke_SM::object* obj);
+    void RenderSneak(Sneke_SM::sneke* sneak);
+
+    void Render(Sneke_SM::object_list* objects = NULL, Sneke_SM::sneke* player = NULL);
     void HandleEvent(SDL_Event& event);
 };

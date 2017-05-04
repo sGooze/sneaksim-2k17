@@ -14,24 +14,26 @@
 namespace Sneke_SM{
 
     enum COLLISION {COLL_NONE, COLL_KILL, COLL_EAT};
-    enum DIRECTION {DIR_UP, DIR_RIGHT, DIR_DOWN, DIR_LEFT};
+    enum DIRECTION {DIR_UP = 0, DIR_RIGHT = 1, DIR_DOWN = 2, DIR_LEFT = 3};
 
     class object{
     protected:
-        uint16_t x, y;
+        //uint16_t x, y;
+        SDL_Rect bbox;
         SDL_Color color = {0xFF, 0xFF, 0xFF, 0xFF};
     public:
         virtual COLLISION onCollide() = 0;
-        object(int cx, int cy) : x(cx), y(cy){};
+        object(int cx, int cy) : bbox{cx, cy, 1, 1}{};
         virtual ~object(){};
-        uint16_t GetX(){return x;}
-        uint16_t GetY(){return y;}
-        RenderElement Render(){return RenderElement(x, y, 1, 1, color);}
+        uint16_t GetX(){return bbox.x;}
+        uint16_t GetY(){return bbox.y;}
+        SDL_Rect& GetBBox(){return bbox;}
+        SDL_Color& GetColor(){return color;}
     };
 
     class wall : public object{
     public:
-        wall(int cx, int cy) : object(cx, cy){};
+        wall(int cx, int cy, int cwidth = 1, int cheight = 1) : object(cx, cy){bbox.w = cwidth; bbox.h = cheight;};
         virtual COLLISION onCollide() {return COLL_KILL;}
     };
 
@@ -56,6 +58,9 @@ namespace Sneke_SM{
         void move (const int& cx, const int& cy);
         void kill();
         void Collide(COLLISION& col);           // Updates state of the snek based on the recent collision result
+        uint16_t GetX(){return x;}
+        uint16_t GetY(){return y;}
+        std::forward_list<sneke_body*>& GetBody(){return body;}
     };
 
     class object_list{
@@ -87,5 +92,7 @@ namespace Sneke_SM{
         uint16_t GetY(){return y;}
         object_list* GetObjectListPtr(){return &objects;}
         object_list& GetObjectList(){return objects;}
+        sneke* GetPlayerObjectPtr(){return &player;}
+        sneke& GetPlayerObject(){return player;}
     };
 }
