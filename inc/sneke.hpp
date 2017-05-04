@@ -8,8 +8,6 @@
 #include <list>
 #include <forward_list>
 
-// TODO: REMOVE RenderElement && RenderQueue
-//       Rendering is handled directly by Renderer, which has two more functions: render basic object, and render sneke
 
 namespace Sneke_SM{
 
@@ -27,6 +25,7 @@ namespace Sneke_SM{
         virtual ~object(){};
         uint16_t GetX(){return bbox.x;}
         uint16_t GetY(){return bbox.y;}
+        void SetXY(int& cx, int& cy){bbox.x = cx; bbox.y = cy;}
         SDL_Rect& GetBBox(){return bbox;}
         SDL_Color& GetColor(){return color;}
     };
@@ -43,24 +42,42 @@ namespace Sneke_SM{
         fruit(int cx, int cy, uint16_t val_points = 100) : object(cx, cy), value(val_points){};
     };
 
-    typedef wall sneke_body;
+    //typedef wall sneke_body;
+    class field;
+
+    class sneke_body{
+        struct sneke_body_element{
+            wall piece;
+            sneke_body_element *next = NULL;
+            sneke_body_element(int cx, int cy) : piece(cx, cy){}
+            ~sneke_body_element(){if (next != NULL) delete next;}
+        };
+        sneke_body_element *head, *prtail, *current;
+    public:
+        sneke_body(int length, int& head_x, int& head_y);
+        void Grow();
+        //void PushBackToFront();
+        void Move(uint16_t& head_x, uint16_t& head_y);
+        wall* GetPiece(){if(current == NULL) return NULL; wall* cw = &(current->piece); current = current->next; return cw;};
+        void ResetCurrent(){current = head;}
+        ~sneke_body(){delete head;};
+    };
 
     class sneke{
     private:
+        friend class field;
         uint16_t x, y;
         uint16_t length = 5;
         DIRECTION movement_dir = DIR_LEFT;
-        std::forward_list<sneke_body*> body;
+        //std::forward_list<sneke_body*> body;
+        sneke_body body;
     public:
         sneke(int cx, int cy);
         ~sneke();
-        void move(DIRECTION dir_new);
-        void move (const int& cx, const int& cy);
-        void kill();
-        void Collide(COLLISION& col);           // Updates state of the snek based on the recent collision result
+        //void Collide(COLLISION& col);           // Updates state of the snek based on the recent collision result
         uint16_t GetX(){return x;}
         uint16_t GetY(){return y;}
-        std::forward_list<sneke_body*>& GetBody(){return body;}
+        wall* GetBody(){return body.GetPiece();}
     };
 
     class object_list{
@@ -85,7 +102,7 @@ namespace Sneke_SM{
         field(int size_x, int size_y) : x(size_x), y(size_y), player(size_x / 2, size_y / 2) {};
         ~field(){};
 
-        void Update();
+        void Update();                      // Moves snek, then checks for collision
         void ParseEvent(SDL_Event& event);
         void AddObjectList();
         uint16_t GetX(){return x;}

@@ -31,6 +31,8 @@ void GameWrapper::PollEvents(){
     static SDL_Event event;
     while (SDL_PollEvent(&event)){
         switch (event.type){
+        case SDL_KEYDOWN:
+            break;
         case SDL_QUIT:
             valid = false;
             break;
@@ -55,10 +57,9 @@ int GameWrapper::MainLoop(){
     while (valid){
         frame_start = SDL_GetTicks();
         PollEvents();       // Get events and send them to event handlers
-                            // Update field state
+        gamefield.Update(); // Update field state
         render.Render(field_obj, playa_obj);    // Render field and HUD
         // Pointer to object list is passed to the renderer, who then uses a set of functions to render objects to the field texture
-        // RenderCommandList
         sleep = frame_start + frame_ms - SDL_GetTicks();
         if (sleep < 0)
             sleep = 0;

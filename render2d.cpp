@@ -136,9 +136,11 @@ void Render2D::RenderObject(Sneke_SM::object* obj){
 void Render2D::RenderSneak(Sneke_SM::sneke* sneak){
     SDL_SetRenderDrawColor(renderer, 0xFF, 0, 0, 0xFF);
     RenderDrawPoint(sneak->GetX(), sneak->GetY());
-    auto body = sneak->GetBody();
-    for (auto it = body.cbegin(); it != body.cend(); it++)
-        RenderObject((*it));
+    Sneke_SM::wall* piece = sneak->GetBody();
+    while (piece != NULL){
+        RenderObject(piece);
+        piece = sneak->GetBody();
+    }
 }
 
 void Render2D::Render(Sneke_SM::object_list* objects, Sneke_SM::sneke* player){
