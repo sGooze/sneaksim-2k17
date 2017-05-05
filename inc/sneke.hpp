@@ -7,6 +7,7 @@
 #include "render_element.hpp"
 #include <list>
 #include <forward_list>
+#include <vector>
 
 
 namespace Sneke_SM{
@@ -26,6 +27,7 @@ namespace Sneke_SM{
         uint16_t GetX(){return bbox.x;}
         uint16_t GetY(){return bbox.y;}
         void SetXY(int& cx, int& cy){bbox.x = cx; bbox.y = cy;}
+        void SetXY(uint16_t& cx, uint16_t& cy){bbox.x = cx; bbox.y = cy;}
         SDL_Rect& GetBBox(){return bbox;}
         SDL_Color& GetColor(){return color;}
     };
@@ -46,30 +48,22 @@ namespace Sneke_SM{
     class field;
 
     class sneke_body{
-        struct sneke_body_element{
-            wall piece;
-            sneke_body_element *next = NULL;
-            sneke_body_element(int cx, int cy) : piece(cx, cy){}
-            ~sneke_body_element(){if (next != NULL) delete next;}
-        };
-        sneke_body_element *head, *prtail, *current;
+        std::vector<wall> body;
+        uint16_t last_piece, length;
     public:
-        sneke_body(int length, int& head_x, int& head_y);
+        sneke_body(uint16_t length_, int& head_x, int& head_y);
         void Grow();
-        //void PushBackToFront();
         void Move(uint16_t& head_x, uint16_t& head_y);
-        wall* GetPiece(){if(current == NULL) return NULL; wall* cw = &(current->piece); current = current->next; return cw;};
-        void ResetCurrent(){current = head;}
-        ~sneke_body(){delete head;};
+        std::vector<wall>& GetBody(){return body;};
+        //wall* GetPiece(){if(current == NULL) return NULL; wall* cw = &(current->piece); current = current->next; return cw;};
+        ~sneke_body(){};
     };
 
     class sneke{
     private:
         friend class field;
         uint16_t x, y;
-        uint16_t length = 5;
         DIRECTION movement_dir = DIR_LEFT;
-        //std::forward_list<sneke_body*> body;
         sneke_body body;
     public:
         sneke(int cx, int cy);
@@ -77,7 +71,7 @@ namespace Sneke_SM{
         //void Collide(COLLISION& col);           // Updates state of the snek based on the recent collision result
         uint16_t GetX(){return x;}
         uint16_t GetY(){return y;}
-        wall* GetBody(){return body.GetPiece();}
+        std::vector<wall>& GetBody(){return body.GetBody();};
     };
 
     class object_list{

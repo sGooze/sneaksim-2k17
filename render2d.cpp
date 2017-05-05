@@ -134,13 +134,13 @@ void Render2D::RenderObject(Sneke_SM::object* obj){
 }
 
 void Render2D::RenderSneak(Sneke_SM::sneke* sneak){
+    // Get objlist vector and iterate through it
+    static std::vector<Sneke_SM::wall>& body = sneak->GetBody();
+    for (Sneke_SM::wall& piece : body){
+        RenderObject(&piece);
+    }
     SDL_SetRenderDrawColor(renderer, 0xFF, 0, 0, 0xFF);
     RenderDrawPoint(sneak->GetX(), sneak->GetY());
-    Sneke_SM::wall* piece = sneak->GetBody();
-    while (piece != NULL){
-        RenderObject(piece);
-        piece = sneak->GetBody();
-    }
 }
 
 void Render2D::Render(Sneke_SM::object_list* objects, Sneke_SM::sneke* player){
@@ -154,7 +154,7 @@ void Render2D::Render(Sneke_SM::object_list* objects, Sneke_SM::sneke* player){
             SDL_RenderClear(renderer);
             // Render all objects to the field texture
             if (objects != NULL){
-
+                // Get objlist vector and iterate through it
             }
             if (player != NULL)
                 RenderSneak(player);

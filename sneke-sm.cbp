@@ -39,6 +39,7 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add option="-Wno-switch" />
 		</Compiler>
 		<Unit filename="inc/common.hpp" />
 		<Unit filename="inc/render2d.hpp" />

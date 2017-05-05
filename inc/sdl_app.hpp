@@ -17,7 +17,7 @@ private:
 
     Render2D render;
 
-    uint16_t game_speed = 2; // in frames per second
+    uint16_t game_speed = 1; // in frames per second
     uint16_t frametime_prev;
     uint16_t frametime_d;
     uint16_t frametime_now;
