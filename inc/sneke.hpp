@@ -44,34 +44,37 @@ namespace Sneke_SM{
         fruit(int cx, int cy, uint16_t val_points = 100) : object(cx, cy), value(val_points){};
     };
 
-    //typedef wall sneke_body;
     class field;
-
-    class sneke_body{
-        std::vector<wall> body;
-        uint16_t last_piece, length;
-    public:
-        sneke_body(uint16_t length_, int& head_x, int& head_y);
-        void Grow();
-        void Move(uint16_t& head_x, uint16_t& head_y);
-        std::vector<wall>& GetBody(){return body;};
-        //wall* GetPiece(){if(current == NULL) return NULL; wall* cw = &(current->piece); current = current->next; return cw;};
-        ~sneke_body(){};
-    };
 
     class sneke{
     private:
         friend class field;
         uint16_t x, y;
         DIRECTION movement_dir = DIR_LEFT;
+
+        class sneke_body{
+        public:
+            std::list<wall> body;
+            uint16_t last_piece, length;
+
+            sneke_body(uint16_t length_, int& head_x, int& head_y);
+            void Grow();
+            void Move(uint16_t& head_x, uint16_t& head_y);
+            ~sneke_body(){};
+
+            uint16_t GetLength(){return length;}
+        };
+
         sneke_body body;
     public:
         sneke(int cx, int cy);
         ~sneke();
         //void Collide(COLLISION& col);           // Updates state of the snek based on the recent collision result
+        bool IsCollidingWithBody();
         uint16_t GetX(){return x;}
         uint16_t GetY(){return y;}
-        std::vector<wall>& GetBody(){return body.GetBody();};
+        uint16_t GetLength(){return body.length;}
+        std::list<wall>& GetBody(){return body.body;};
     };
 
     class object_list{
@@ -86,21 +89,31 @@ namespace Sneke_SM{
         bool Remove(object* obj);                       // Finds object in the list, removes it and returns TRUE
     };
 
+    enum field_gamestate {GAMESTATE_INACTIVE, GAMESTATE_ACTIVE, GAMESTATE_PAUSED, GAMESTATE_FINISHED};
+
     class field{
     private:
         uint16_t x, y;
         uint32_t score = 0;
         object_list objects;
         sneke player;
+        field_gamestate game_state = GAMESTATE_INACTIVE;
     public:
-        field(int size_x, int size_y) : x(size_x), y(size_y), player(size_x / 2, size_y / 2) {};
+        field() : x(0), y(0), player(0, 0){};
+        field(int size_x, int size_y) : x(size_x), y(size_y), player(size_x / 2, size_y / 2) {game_state = GAMESTATE_ACTIVE;};
         ~field(){};
 
+        void Init(int size_x, int size_y);
         void Update();                      // Moves snek, then checks for collision
         void ParseEvent(SDL_Event& event);
         void AddObjectList();
         uint16_t GetX(){return x;}
         uint16_t GetY(){return y;}
+        uint32_t GetScore(){return score;}
+
+        field_gamestate GetGameState(){return game_state;}
+        void SetGameState(field_gamestate new_state){game_state = new_state;}
+
         object_list* GetObjectListPtr(){return &objects;}
         object_list& GetObjectList(){return objects;}
         sneke* GetPlayerObjectPtr(){return &player;}

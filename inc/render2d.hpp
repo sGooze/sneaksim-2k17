@@ -42,8 +42,6 @@ private:
     bool fullscreen = false;
     std::string win_title = "Sneak";
 
-    //TextureArray textures;
-
     SDL_Rect viewport_field;
     SDL_Rect viewport_hud;
     SDL_Texture *texField = NULL, *texFont = NULL;
@@ -54,6 +52,13 @@ public:
     void Reset(bool recreate = false);       // Recreate window and renderer with new parameters
     void InitFieldTexture(uint16_t fx, uint16_t fy);
     void InitFontTexture();
+
+    // Main rendering functions
+    void RenderStart();
+    void RenderField(Sneke_SM::object_list* objects = NULL, Sneke_SM::sneke* player = NULL);
+    void RenderHUD(Sneke_SM::field* gamefield);
+    void RenderEnd();
+    void HandleEvent(SDL_Event& event);
 
     // Setup window parameters
     void WindowSetBorderless(bool new_val){borderless = new_val;}
@@ -80,6 +85,4 @@ public:
     void RenderObject(Sneke_SM::object* obj);
     void RenderSneak(Sneke_SM::sneke* sneak);
 
-    void Render(Sneke_SM::object_list* objects = NULL, Sneke_SM::sneke* player = NULL);
-    void HandleEvent(SDL_Event& event);
 };

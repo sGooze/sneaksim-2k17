@@ -328,14 +328,15 @@
 	"begin_code.h"
 	"close_code.h"
 
-1493848044 source:d:\dev\our vidya\sneke-sm\sneke.cpp
+1494257424 source:d:\dev\our vidya\sneke-sm\sneke.cpp
 	"inc/sneke.hpp"
 
-1493848299 d:\dev\our vidya\sneke-sm\inc\sneke.hpp
+1494256530 d:\dev\our vidya\sneke-sm\inc\sneke.hpp
 	"common.hpp"
 	"render_element.hpp"
 	<list>
 	<forward_list>
+	<vector>
 
 1493476488 d:\dev\our vidya\sneke-sm\inc\common.hpp
 	<iostream>
@@ -663,16 +664,16 @@
 	"begin_code.h"
 	"close_code.h"
 
-1493847910 source:d:\dev\our vidya\sneke-sm\main.cpp
+1494256401 source:d:\dev\our vidya\sneke-sm\main.cpp
 	"inc/sdl_app.hpp"
 
-1493476488 d:\dev\our vidya\sneke-sm\inc\sdl_app.hpp
+1494248357 d:\dev\our vidya\sneke-sm\inc\sdl_app.hpp
 	<SDL2/SDL.h>
 	"common.hpp"
 	"sneke.hpp"
 	"render2d.hpp"
 
-1493847424 source:d:\dev\our vidya\sneke-sm\render2d.cpp
+1494256568 source:d:\dev\our vidya\sneke-sm\render2d.cpp
 	"inc/render2d.hpp"
 
 1493986664 source:d:\codeblocks-16.01-mingw\sneke-sm\render2d.cpp
@@ -706,7 +707,7 @@
 	"common.hpp"
 	<vector>
 
-1493848656 d:\dev\our vidya\sneke-sm\inc\render2d.hpp
+1494255069 d:\dev\our vidya\sneke-sm\inc\render2d.hpp
 	"common.hpp"
 	"sneke.hpp"
 
