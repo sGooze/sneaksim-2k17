@@ -14,11 +14,17 @@ bool Sneke_SM::object_list::Add(object* obj){
 }
 
 Sneke_SM::object* Sneke_SM::object_list::getObject(const int& cx, const int& cy){
-    for (auto it = objlist.begin(); it != objlist.end(); ++it){
+    for (auto it = objlist.begin(); it != objlist.end(); it++){
         if (((*it)->GetX() == cx)&&((*it)->GetY() == cy))
             return *it;
     }
     return NULL;
+}
+
+Sneke_SM::object_list::~object_list(){
+    for (auto it = objlist.begin(); it != objlist.end(); it++){
+        delete *it;
+    }
 }
 
 ////******* S N E K E _ B O D Y *******////
@@ -60,6 +66,13 @@ bool Sneke_SM::sneke::IsCollidingWithBody(){
 // F  I  E  L  D  //
 // // // // // // //
 
+Sneke_SM::field::field (int size_x, int size_y) : x(size_x), y(size_y), player(size_x / 2, size_y / 2),
+                                            coords_x(0, size_x - 1), coords_y(0, size_y - 1){
+    game_state = GAMESTATE_ACTIVE;
+    randgen.seed(std::chrono::system_clock::now().time_since_epoch().count());
+    SpawnTreat();
+}
+
 void Sneke_SM::field::ParseEvent(SDL_Event& event){
     // Called once per rendering cycle
     switch (game_state){
@@ -73,7 +86,9 @@ void Sneke_SM::field::ParseEvent(SDL_Event& event){
     }
     if (event.type == SDL_KEYDOWN){
         switch(event.key.keysym.scancode){
-            case SDL_SCANCODE_ESCAPE: game_state = GAMESTATE_PAUSED; break;
+            case SDL_SCANCODE_ESCAPE: game_state = GAMESTATE_PAUSED;
+                std::cout << "POS " << player.x << " " << player.y << std::endl;
+                break;
             // TODO: BUG: Pressing combinations such as LEFT->UP during one keyframe when snek is moving DOWN...
             // will lead to sneak's head moving into it's body
             case SDL_SCANCODE_DOWN:  if (player.movement_dir != DIR_UP) player.movement_dir = DIR_DOWN; break;
@@ -87,17 +102,40 @@ void Sneke_SM::field::ParseEvent(SDL_Event& event){
 
 void Sneke_SM::field::Update(){
     // Called once per game update cycle
+    static Sneke_SM::object *obj;
     // Move snek's body
     player.body.Move(player.x, player.y);
     // Move snek's head
     switch (player.movement_dir){
-        case DIR_DOWN:  (player.y < y) ? player.y++ : (player.y = 0); break;
-        case DIR_LEFT:  (player.x > 0) ? player.x-- : (player.x = x); break;
-        case DIR_RIGHT: (player.x < x) ? player.x++ : (player.x = 0); break;
-        case DIR_UP:    (player.y > 0) ? player.y-- : (player.y = y); break;
+        // TODO: Optimize ( ) )
+        case DIR_DOWN:  (player.y < y - 1) ? player.y++ : (player.y = 0); break;
+        case DIR_LEFT:  (player.x > 0) ? player.x-- : (player.x = x - 1); break;
+        case DIR_RIGHT: (player.x < x - 1) ? player.x++ : (player.x = 0); break;
+        case DIR_UP:    (player.y > 0) ? player.y-- : (player.y = y - 1); break;
     }
     // First, check for collision with body
     if (player.IsCollidingWithBody()){
         game_state = GAMESTATE_FINISHED;
     }
+    obj = objects.getObject(player.x, player.y);
+    if (obj != NULL){
+        switch (obj->onCollide()){
+            case Sneke_SM::COLL_EAT:
+                score += obj->GetValue();
+                player.body.Grow();
+                obj->SetXY( coords_x(randgen), coords_y(randgen) );
+                break;
+            case Sneke_SM::COLL_KILL:
+                game_state = GAMESTATE_FINISHED;
+                break;
+        }
+    }
 }
+
+void Sneke_SM::field::SpawnTreat(){
+    Sneke_SM::fruit* candy = new Sneke_SM::fruit(0, 0);
+        candy->SetXY( coords_x(randgen), coords_y(randgen) );
+    objects.Add(candy);
+    std::cout << "Spawned some candy at (" << candy->GetX() << ";" << candy->GetY() << ")\n";
+}
+

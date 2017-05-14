@@ -8,6 +8,8 @@
 #include <list>
 #include <forward_list>
 #include <vector>
+#include <random>
+#include <chrono>
 
 
 namespace Sneke_SM{
@@ -22,11 +24,12 @@ namespace Sneke_SM{
         SDL_Color color = {0xFF, 0xFF, 0xFF, 0xFF};
     public:
         virtual COLLISION onCollide() = 0;
+        virtual uint16_t GetValue(){return 0;}
         object(int cx, int cy) : bbox{cx, cy, 1, 1}{};
         virtual ~object(){};
         uint16_t GetX(){return bbox.x;}
         uint16_t GetY(){return bbox.y;}
-        void SetXY(int& cx, int& cy){bbox.x = cx; bbox.y = cy;}
+        void SetXY(int cx, int cy){bbox.x = cx; bbox.y = cy;}
         void SetXY(uint16_t& cx, uint16_t& cy){bbox.x = cx; bbox.y = cy;}
         SDL_Rect& GetBBox(){return bbox;}
         SDL_Color& GetColor(){return color;}
@@ -42,6 +45,23 @@ namespace Sneke_SM{
         uint16_t value;
     public:
         fruit(int cx, int cy, uint16_t val_points = 100) : object(cx, cy), value(val_points){};
+        COLLISION onCollide(){return COLL_EAT;}
+        uint16_t GetValue(){return value;}
+    };
+
+
+    class object_list{
+    private:
+        std::list<object*> objlist;
+    public:
+        object_list(){};
+        ~object_list();
+        COLLISION getCollision(const int& cx, const int& cy); // Gets object collision result; may remove it
+        object* getObject(const int& cx, const int& cy);
+        //std::list<object&> getObjectsByType()
+        std::list<object*>* getAllObjects(){return &objlist;}
+        bool Add(object* obj);
+        bool Remove(object* obj);                       // Finds object in the list, removes it and returns TRUE
     };
 
     class field;
@@ -53,6 +73,7 @@ namespace Sneke_SM{
         DIRECTION movement_dir = DIR_LEFT;
 
         class sneke_body{
+            // TODO: rewrite as a child of object_list??
         public:
             std::list<wall> body;
             uint16_t last_piece, length;
@@ -60,7 +81,6 @@ namespace Sneke_SM{
             sneke_body(uint16_t length_, int& head_x, int& head_y);
             void Grow();
             void Move(uint16_t& head_x, uint16_t& head_y);
-            ~sneke_body(){};
 
             uint16_t GetLength(){return length;}
         };
@@ -74,20 +94,11 @@ namespace Sneke_SM{
         uint16_t GetX(){return x;}
         uint16_t GetY(){return y;}
         uint16_t GetLength(){return body.length;}
+        void SetLength(uint16_t len);
+        void Reset(uint16_t cx, uint16_t cy);    // Places snek to the specified position with its body coiled up in one spot
         std::list<wall>& GetBody(){return body.body;};
     };
 
-    class object_list{
-    private:
-        std::list<object*> objlist;
-    public:
-        object_list(){};
-        COLLISION getCollision(const int& cx, const int& cy); // Gets object collision result; may remove it
-        object* getObject(const int& cx, const int& cy);
-        //std::list<object&> getObjectsByType()
-        bool Add(object* obj);
-        bool Remove(object* obj);                       // Finds object in the list, removes it and returns TRUE
-    };
 
     enum field_gamestate {GAMESTATE_INACTIVE, GAMESTATE_ACTIVE, GAMESTATE_PAUSED, GAMESTATE_FINISHED};
 
@@ -98,15 +109,21 @@ namespace Sneke_SM{
         object_list objects;
         sneke player;
         field_gamestate game_state = GAMESTATE_INACTIVE;
+
+        // Random number generator (for object coordinates)
+        std::default_random_engine randgen;
+        std::uniform_int_distribution<int> coords_x;
+        std::uniform_int_distribution<int> coords_y;
+
     public:
-        field() : x(0), y(0), player(0, 0){};
-        field(int size_x, int size_y) : x(size_x), y(size_y), player(size_x / 2, size_y / 2) {game_state = GAMESTATE_ACTIVE;};
+        //field() : x(0), y(0), player(0, 0){};
+        field(int size_x, int size_y);
         ~field(){};
 
-        void Init(int size_x, int size_y);
         void Update();                      // Moves snek, then checks for collision
         void ParseEvent(SDL_Event& event);
         void AddObjectList();
+        void SpawnTreat();                  // Temp function for basic candy spawning
         uint16_t GetX(){return x;}
         uint16_t GetY(){return y;}
         uint32_t GetScore(){return score;}

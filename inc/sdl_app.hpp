@@ -8,6 +8,9 @@
 #include "sneke.hpp"
 #include "render2d.hpp"
 
+using namespace Sneke_SM;
+
+#define FPS_MAX 30.0
 
 class GameWrapper{
 private:
@@ -16,7 +19,9 @@ private:
     bool ShutdownSDL();
 
     Render2D render;
-    Sneke_SM::field *gamefield = NULL;
+    field *gamefield = NULL;
+    std::list<object*> *field_obj = NULL;
+    sneke *playa_obj = NULL;
 
     uint16_t game_speed = 5; // in frames per second
 
@@ -28,7 +33,7 @@ public:
     ~GameWrapper();
     void PollEvents();      // Gets all events from SDL event pipeline and sends them to handlers
     void StartGame();       // Init gamefield
-    void StopGame(){gamefield->SetGameState(Sneke_SM::GAMESTATE_INACTIVE);};        // Set gamefield state as inactive
+    void StopGame();        // Set gamefield state as inactive
 
     int MainLoop(); // Read events, process events, tick the field, calculate framerate and wait
 };

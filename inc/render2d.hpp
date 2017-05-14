@@ -37,7 +37,7 @@ private:
     SDL_Renderer *renderer = NULL;
     SDL_Window *window = NULL;
     uint16_t w, h;
-    uint8_t scale = 5;
+    uint8_t scale = 7;
     bool borderless = false;
     bool fullscreen = false;
     std::string win_title = "Sneak";
@@ -55,7 +55,7 @@ public:
 
     // Main rendering functions
     void RenderStart();
-    void RenderField(Sneke_SM::object_list* objects = NULL, Sneke_SM::sneke* player = NULL);
+    void RenderField(std::list<Sneke_SM::object*>* objects = NULL, Sneke_SM::sneke* player = NULL);
     void RenderHUD(Sneke_SM::field* gamefield);
     void RenderEnd();
     void HandleEvent(SDL_Event& event);

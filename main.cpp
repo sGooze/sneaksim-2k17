@@ -15,6 +15,7 @@ GameWrapper::GameWrapper(){
         render.WindowSetWidth(640);
         render.WindowSetHeight(480);
         render.Reset(true);
+        frame_ms = (1000.0 / FPS_MAX);
     }
     catch (std::runtime_error& rt){
         std::cout << "Runtime exception caught during initialization:\n " << rt.what();
@@ -43,6 +44,9 @@ void GameWrapper::PollEvents(){
             }
             if ((event.key.keysym.scancode == SDL_SCANCODE_F10))
                 valid = false;
+            if ((event.key.keysym.scancode == SDL_SCANCODE_R)&&(gamefield->GetGameState() == GAMESTATE_FINISHED)){
+                StartGame();
+            }
             gamefield->ParseEvent(event);
             break;
         case SDL_QUIT:
@@ -55,21 +59,24 @@ void GameWrapper::PollEvents(){
 void GameWrapper::StartGame(){
     if (gamefield != NULL)
         StopGame();
-    gamefield = new field(64, 64);
+    gamefield = new field(32, 32);
     render.InitFieldTexture(gamefield->GetX(), gamefield->GetY());
+    field_obj = gamefield->GetObjectListPtr()->getAllObjects();
+    playa_obj = gamefield->GetPlayerObjectPtr();
+    gamespeed_ms = (1000.0 / (float)game_speed);
 }
 
-#define FPS_MAX 30.0
+void GameWrapper::StopGame(){
+    delete gamefield;
+    field_obj = NULL;
+    playa_obj = NULL;
+}
 
 int GameWrapper::MainLoop(){
     if (!valid)
         return -1;
 
     StartGame();
-    auto field_obj = gamefield->GetObjectListPtr();
-    auto playa_obj = gamefield->GetPlayerObjectPtr();
-
-    frame_ms = (1000.0 / FPS_MAX); gamespeed_ms = (1000.0 / (float)game_speed);
     // Fixed time step is used since the game should be so simple that anything but microwavers should be able to run it at 30/60FPS
     while (valid){
         frame_start = SDL_GetTicks();

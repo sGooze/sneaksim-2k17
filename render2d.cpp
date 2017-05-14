@@ -33,6 +33,7 @@ void Render2D::Reset(bool recreate){
             throw std::runtime_error("Render2D::Reset() - unable to create a renderer\n");
         InitFontTexture();
     } else {
+        // TODO: Adjust field texture & HUD positions on window resize
         WindowResize();
         WindowSetBorderless(borderless);
         WindowSetFullscreen(fullscreen);
@@ -126,6 +127,7 @@ void Render2D::RenderString(const std::string& str, const uint16_t start_x, cons
 // // // // // // // // // // // // // // // //
 
 void Render2D::RenderObject(Sneke_SM::object* obj){
+    //std::cout << "(" << obj->GetX() << ";" << obj->GetY() << ")\n";
     SDL_Color& col = obj->GetColor();
     SDL_SetRenderDrawColor(renderer, col.r, col.g, col.b, col.a);
     SDL_RenderFillRect(renderer, &obj->GetBBox());
@@ -151,7 +153,7 @@ void Render2D::RenderStart(){
     SDL_RenderClear(renderer);
 }
 
-void Render2D::RenderField(Sneke_SM::object_list* objects, Sneke_SM::sneke* player){
+void Render2D::RenderField(std::list<Sneke_SM::object*>* objects, Sneke_SM::sneke* player){
     // First, render field texture
     if (texField != NULL){
         if (!(SDL_SetRenderTarget(renderer, texField))){
@@ -161,7 +163,9 @@ void Render2D::RenderField(Sneke_SM::object_list* objects, Sneke_SM::sneke* play
             // Render all objects to the field texture
             if (objects != NULL){
                 // Get objlist vector and iterate through it
-
+                for (auto it = objects->begin(); it != objects->end(); it++){
+                    RenderObject(*it);
+                }
             }
             if (player != NULL)
                 RenderSneak(player);
@@ -181,10 +185,12 @@ void Render2D::RenderHUD(Sneke_SM::field* gamefield){
     SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0xFF, 0xFF);
     RenderFillRect(0, 0, 640, 32);
     RenderString("Length: " + patch::to_string(sneak->GetLength()), 0, 0);
+    RenderString("Score: " + patch::to_string(gamefield->GetScore()), 0, FONT_SIZEY);
     SDL_RenderSetViewport(renderer, NULL);
     RenderString(title, 0, 0);
     if (gamefield->GetGameState() == Sneke_SM::GAMESTATE_FINISHED){
         RenderString("GAME     OVER!\n Your score:" + patch::to_string(gamefield->GetScore()), 128, 128);
+        RenderString("Press R to restart the game", 128, 200);
     }
 }
 
