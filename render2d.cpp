@@ -135,7 +135,7 @@ void Render2D::RenderObject(Sneke_SM::object* obj){
 
 void Render2D::RenderSneak(Sneke_SM::sneke* sneak){
     // Get objlist vector and iterate through it
-    static std::list<Sneke_SM::wall>& body = sneak->GetBody();
+    std::list<Sneke_SM::wall>& body = sneak->GetBody();
     for (Sneke_SM::wall& piece : body){
         RenderObject(&piece);
     }
@@ -167,9 +167,9 @@ void Render2D::RenderField(std::list<Sneke_SM::object*>* objects, Sneke_SM::snek
                     RenderObject(*it);
                 }
             }
+
             if (player != NULL)
                 RenderSneak(player);
-
             SDL_SetRenderTarget(renderer, NULL);
             //SDL_RenderSetViewport(renderer, &viewport_field);
             SDL_RenderSetScale(renderer, 1, 1);

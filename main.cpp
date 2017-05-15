@@ -46,6 +46,7 @@ void GameWrapper::PollEvents(){
                 valid = false;
             if ((event.key.keysym.scancode == SDL_SCANCODE_R)&&(gamefield->GetGameState() == GAMESTATE_FINISHED)){
                 StartGame();
+                break;
             }
             gamefield->ParseEvent(event);
             break;
