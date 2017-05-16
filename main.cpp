@@ -84,9 +84,12 @@ int GameWrapper::MainLoop(){
         PollEvents();       // Get events and send them to event handlers
         render.RenderStart();
 
-        if ((gamefield->GetGameState() == GAMESTATE_ACTIVE)&&(frame_start - gamespeed_last > gamespeed_ms)){
-            gamefield->Update(); // Update field state
-            gamespeed_last = frame_start;
+        if (gamefield->GetGameState() == GAMESTATE_ACTIVE){
+            gamefield->TimerUpdate(); // Update in-game timer
+            if (frame_start - gamespeed_last > gamespeed_ms){
+                gamefield->Update(); // Update field state
+                gamespeed_last = frame_start;
+            }
         }
         render.RenderField(field_obj, playa_obj);    // Render field and HUD
         render.RenderHUD(gamefield);

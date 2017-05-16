@@ -15,13 +15,18 @@
 namespace Sneke_SM{
 
     enum COLLISION {COLL_NONE, COLL_KILL, COLL_EAT};
-    enum DIRECTION {DIR_UP = 0, DIR_RIGHT = 1, DIR_DOWN = 2, DIR_LEFT = 3};
+    enum DIRECTION {DIR_UP = 0, DIR_RIGHT = 1, DIR_DOWN = 2, DIR_LEFT = 3, DIR_NONE = -1};
 
+    enum ANIMATION_STYLE    {ANIM_NONE,     // No animation
+                            ANIM_SWITCH};   // Switch between colors without transition
     class object{
     protected:
         //uint16_t x, y;
         SDL_Rect bbox;
         SDL_Color color = {0xFF, 0xFF, 0xFF, 0xFF};
+        SDL_Color color2 = {0xFF, 0xFF, 0xFF, 0xFF};
+        ANIMATION_STYLE anim_style = ANIM_NONE;
+        uint8_t anim_time = 1;
     public:
         virtual COLLISION onCollide() = 0;
         virtual uint16_t GetValue(){return 0;}
@@ -71,6 +76,7 @@ namespace Sneke_SM{
         friend class field;
         uint16_t x, y;
         DIRECTION movement_dir = DIR_LEFT;
+        //std::list<DIRECTION> movement_dirs;
 
         class sneke_body{
             // TODO: rewrite as a child of object_list??
@@ -81,6 +87,8 @@ namespace Sneke_SM{
             sneke_body(uint16_t length_, int& head_x, int& head_y);
             void Grow();
             void Move(uint16_t& head_x, uint16_t& head_y);
+            //void PushMoveDir(DIRECTION new_direction);          // Adds new movement direction to movement_dirs list
+            //DIRECTION PopMoveDir();                             // Returns first movement direction from the queue. Returns DIR_NONE if queue is empty
 
             uint16_t GetLength(){return length;}
         };
@@ -105,10 +113,11 @@ namespace Sneke_SM{
     class field{
     private:
         uint16_t x, y;
-        uint32_t score = 0;
+        uint32_t score = 0, game_pause = 0, timestamp_activated;
         object_list objects;
         sneke player;
         field_gamestate game_state = GAMESTATE_INACTIVE;
+        DIRECTION dir_new = DIR_NONE;
 
         // Random number generator (for object coordinates)
         std::default_random_engine randgen;
@@ -121,15 +130,17 @@ namespace Sneke_SM{
         ~field(){};
 
         void Update();                      // Moves snek, then checks for collision
+        void TimerUpdate(){game_time = SDL_GetTicks() - timestamp_activated;}
         void ParseEvent(SDL_Event& event);
         void AddObjectList();
         void SpawnTreat();                  // Temp function for basic candy spawning
         uint16_t GetX(){return x;}
         uint16_t GetY(){return y;}
         uint32_t GetScore(){return score;}
+        uint32_t GetGameTime(){return SDL_GetTicks() - timestamp_activated + game_pause;}
 
         field_gamestate GetGameState(){return game_state;}
-        void SetGameState(field_gamestate new_state){game_state = new_state;}
+        void SetGameState(field_gamestate new_state){game_state = new_state; if (game_state == GAMESTATE_ACTIVE) timestamp_activated = SDL_GetTicks();}
 
         object_list* GetObjectListPtr(){return &objects;}
         object_list& GetObjectList(){return objects;}

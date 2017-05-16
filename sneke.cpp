@@ -71,6 +71,7 @@ Sneke_SM::field::field (int size_x, int size_y) : x(size_x), y(size_y), player(s
     game_state = GAMESTATE_ACTIVE;
     randgen.seed(std::chrono::system_clock::now().time_since_epoch().count());
     SpawnTreat();
+    timestamp_activated = SDL_GetTicks();
 }
 
 void Sneke_SM::field::ParseEvent(SDL_Event& event){
@@ -86,16 +87,13 @@ void Sneke_SM::field::ParseEvent(SDL_Event& event){
     }
     if (event.type == SDL_KEYDOWN){
         switch(event.key.keysym.scancode){
-            case SDL_SCANCODE_ESCAPE: game_state = GAMESTATE_PAUSED;
-                std::cout << "POS " << player.x << " " << player.y << std::endl;
-                break;
-            // TODO: BUG: Pressing combinations such as LEFT->UP during one keyframe when snek is moving DOWN...
-            // will lead to sneak's head moving into it's body
-            case SDL_SCANCODE_DOWN:  if (player.movement_dir != DIR_UP) player.movement_dir = DIR_DOWN; break;
-            case SDL_SCANCODE_LEFT:  if (player.movement_dir != DIR_RIGHT) player.movement_dir = DIR_LEFT; break;
-            case SDL_SCANCODE_RIGHT: if (player.movement_dir != DIR_LEFT) player.movement_dir = DIR_RIGHT; break;
-            case SDL_SCANCODE_UP:    if (player.movement_dir != DIR_DOWN) player.movement_dir = DIR_UP; break;
-            case SDL_SCANCODE_G: player.body.Grow(); break;
+            case SDL_SCANCODE_ESCAPE: game_state = GAMESTATE_PAUSED; break;
+
+            case SDL_SCANCODE_DOWN:  if ((dir_new == DIR_NONE)&&(player.movement_dir != DIR_UP)) dir_new = DIR_DOWN; break;
+            case SDL_SCANCODE_LEFT:  if ((dir_new == DIR_NONE)&&(player.movement_dir != DIR_RIGHT)) dir_new = DIR_LEFT; break;
+            case SDL_SCANCODE_RIGHT: if ((dir_new == DIR_NONE)&&(player.movement_dir != DIR_LEFT)) dir_new = DIR_RIGHT; break;
+            case SDL_SCANCODE_UP:    if ((dir_new == DIR_NONE)&&(player.movement_dir != DIR_DOWN)) dir_new = DIR_UP; break;
+            //case SDL_SCANCODE_G: player.body.Grow(); break;
         }
     }
 }
@@ -106,6 +104,8 @@ void Sneke_SM::field::Update(){
     // Move snek's body
     player.body.Move(player.x, player.y);
     // Move snek's head
+    if (dir_new != DIR_NONE)
+        player.movement_dir = dir_new;
     switch (player.movement_dir){
         // TODO: Optimize ( ) )
         case DIR_DOWN:  (player.y < y - 1) ? player.y++ : (player.y = 0); break;
@@ -113,6 +113,7 @@ void Sneke_SM::field::Update(){
         case DIR_RIGHT: (player.x < x - 1) ? player.x++ : (player.x = 0); break;
         case DIR_UP:    (player.y > 0) ? player.y-- : (player.y = y - 1); break;
     }
+    dir_new = DIR_NONE;
     // First, check for collision with body
     if (player.IsCollidingWithBody()){
         game_state = GAMESTATE_FINISHED;

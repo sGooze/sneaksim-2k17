@@ -179,12 +179,12 @@ void Render2D::RenderField(std::list<Sneke_SM::object*>* objects, Sneke_SM::snek
 }
 
 void Render2D::RenderHUD(Sneke_SM::field* gamefield){
-    static Sneke_SM::sneke *sneak = gamefield->GetPlayerObjectPtr();
+    //static Sneke_SM::sneke *sneak = gamefield->GetPlayerObjectPtr();
     // Render HUD
     SDL_RenderSetViewport(renderer, &viewport_hud);
     SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0xFF, 0xFF);
     RenderFillRect(0, 0, 640, 32);
-    RenderString("Length: " + patch::to_string(sneak->GetLength()), 0, 0);
+    RenderString("Time: " + patch::to_string(gamefield->GetGameTime() / 1000), 0, 0);
     RenderString("Score: " + patch::to_string(gamefield->GetScore()), 0, FONT_SIZEY);
     SDL_RenderSetViewport(renderer, NULL);
     RenderString(title, 0, 0);
