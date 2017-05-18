@@ -60,7 +60,7 @@ void GameWrapper::PollEvents(){
 void GameWrapper::StartGame(){
     if (gamefield != NULL)
         StopGame();
-    gamefield = new field(32, 32);
+    gamefield = new field(32, 32, temp_walls);
     render.InitFieldTexture(gamefield->GetX(), gamefield->GetY());
     field_obj = gamefield->GetObjectListPtr()->getAllObjects();
     playa_obj = gamefield->GetPlayerObjectPtr();
@@ -73,10 +73,58 @@ void GameWrapper::StopGame(){
     playa_obj = NULL;
 }
 
-int GameWrapper::MainLoop(){
-    if (!valid)
-        return -1;
+int GameWrapper::MainMenuLoop(){
+    // PLACEHOLDER!
+    static SDL_Event event;
+    while (valid){
+        // StartFrame()
+        frame_start = SDL_GetTicks();
 
+        while (SDL_PollEvent(&event)){
+            switch (event.type){
+            case SDL_KEYDOWN:
+                if ((event.key.keysym.scancode == SDL_SCANCODE_KP_PLUS)||(event.key.keysym.scancode == SDL_SCANCODE_KP_MINUS)){
+                    game_speed += (event.key.keysym.scancode == SDL_SCANCODE_KP_PLUS) ? 1 : -1;
+                    if (game_speed == 0) game_speed = 1;
+                    gamespeed_ms = (1000.0 / (float)game_speed);
+                }
+                else if ((event.key.keysym.scancode == SDL_SCANCODE_W))
+                    temp_walls = !temp_walls;
+                else if ((event.key.keysym.scancode == SDL_SCANCODE_F10))
+                    valid = false;
+                else{
+                    return 1;
+                }
+                break;
+            case SDL_QUIT:
+                valid = false;
+                break;
+            }
+        }
+
+
+        render.RenderStart();
+
+        render.RenderString("WELCOME TO", 0, 10);
+        render.RenderString("\nS N E K  S I M U L A T O R  2 0 1 7");
+        render.RenderString("\n\n\n +/-: In-game speed: ");
+        render.RenderString(patch::to_string(game_speed));
+        render.RenderString("\n   W: Solid walls: ");
+        render.RenderString(patch::to_string(temp_walls));
+        render.RenderString("\n\n F10: Exit");
+        render.RenderString("\n\n Press any other key to start");
+
+        // EndFrame()
+        render.RenderEnd();
+        sleep = frame_start + frame_ms - SDL_GetTicks();
+        if (sleep < 0)
+            sleep = 0;
+        SDL_Delay(sleep);
+    }
+    return 0;
+}
+
+int GameWrapper::InGameLoop(){
     StartGame();
     // Fixed time step is used since the game should be so simple that anything but microwavers should be able to run it at 30/60FPS
     while (valid){
@@ -96,11 +144,20 @@ int GameWrapper::MainLoop(){
         if (gamefield->GetGameState() == GAMESTATE_PAUSED)
             render.RenderString("Paused!", 128, 128);
         render.RenderEnd();
+
         sleep = frame_start + frame_ms - SDL_GetTicks();
         if (sleep < 0)
             sleep = 0;
         SDL_Delay(sleep);
     }
+    return 0;
+}
+
+int GameWrapper::MainLoop(){
+    if (!valid)
+        return -1;
+    if (MainMenuLoop() == 1)
+        InGameLoop();
     return 0;
 }
 

@@ -99,15 +99,23 @@ void Render2D::RenderFillRect(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2
 #define FONT_SIZEX 16
 #define FONT_SIZEY 16
 
-void Render2D::RenderString(const std::string& str, const uint16_t start_x, const uint16_t start_y){
+void Render2D::RenderString(const std::string& str, uint16_t start_x, uint16_t start_y){
     uint8_t ch;
     static SDL_Rect ch_bitmap = {0, 0, FONT_SIZEX, FONT_SIZEY}, ch_screen = ch_bitmap;
+    static uint16_t string_startx = 0, string_starty = 0;
     ch_bitmap.x = ch_bitmap.y = 0;
-    ch_screen.x = start_x; ch_screen.y = start_y;
+    if (start_x != APPEND_STRING)
+        ch_screen.x = string_startx = start_x;
+    else
+        start_x = ch_screen.x;
+    if (start_y != APPEND_STRING)
+        ch_screen.y = string_starty = start_y;
+    else
+        start_y = ch_screen.y;
     for (auto it = str.begin(); it < str.end(); ++it){
         ch = *it;
         if (ch == '\n'){
-            ch_screen.x = start_x; ch_screen.y += FONT_SIZEY;
+            ch_screen.x = string_startx; ch_screen.y += FONT_SIZEY;
             continue;
         }
         if (ch < 32)

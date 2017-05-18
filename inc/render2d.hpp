@@ -32,6 +32,8 @@ public:
 };
 */
 
+#define APPEND_STRING 65535
+
 class Render2D{
 private:
     SDL_Renderer *renderer = NULL;
@@ -79,7 +81,7 @@ public:
     void RenderDrawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
     void RenderDrawRect(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
     void RenderFillRect(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
-    void RenderString(const std::string& str, const uint16_t start_x, const uint16_t start_y);
+    void RenderString(const std::string& str, uint16_t start_x = APPEND_STRING, uint16_t start_y = APPEND_STRING);
 
     // Drawing functions for game objects
     void RenderObject(Sneke_SM::object* obj);

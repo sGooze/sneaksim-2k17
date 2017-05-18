@@ -13,9 +13,25 @@ bool Sneke_SM::object_list::Add(object* obj){
     return true;
 }
 
-Sneke_SM::object* Sneke_SM::object_list::getObject(const int& cx, const int& cy){
+Sneke_SM::COLLISION Sneke_SM::object_list::getCollision(const int& cx, const int& cy){
+    static SDL_Rect rect = {0, 0, 1, 1};
+    rect.x = cx; rect.y = cy;
     for (auto it = objlist.begin(); it != objlist.end(); it++){
+        if ( SDL_HasIntersection( &rect, &((*it)->GetBBox()) ) )
+            return (*it)->onCollide();
+    }
+    return Sneke_SM::COLL_NONE;
+}
+
+Sneke_SM::object* Sneke_SM::object_list::getObject(const int& cx, const int& cy){
+    /*for (auto it = objlist.begin(); it != objlist.end(); it++){
         if (((*it)->GetX() == cx)&&((*it)->GetY() == cy))
+            return *it;
+    }*/
+    static SDL_Rect rect = {0, 0, 1, 1};
+    rect.x = cx; rect.y = cy;
+    for (auto it = objlist.begin(); it != objlist.end(); it++){
+        if ( SDL_HasIntersection( &rect, &((*it)->GetBBox()) ) )
             return *it;
     }
     return NULL;
@@ -66,12 +82,18 @@ bool Sneke_SM::sneke::IsCollidingWithBody(){
 // F  I  E  L  D  //
 // // // // // // //
 
-Sneke_SM::field::field (int size_x, int size_y) : x(size_x), y(size_y), player(size_x / 2, size_y / 2),
+Sneke_SM::field::field (int size_x, int size_y, bool solid_edges) : x(size_x), y(size_y), player(size_x / 2, size_y / 2),
                                             coords_x(0, size_x - 1), coords_y(0, size_y - 1){
     game_state = GAMESTATE_ACTIVE;
     randgen.seed(std::chrono::system_clock::now().time_since_epoch().count());
     SpawnTreat();
     timestamp_activated = SDL_GetTicks();
+    if (solid_edges){
+        objects.Add( new Sneke_SM::wall(0, 0, x) );
+        objects.Add( new Sneke_SM::wall(0, y - 1, x) );
+        objects.Add( new Sneke_SM::wall(x - 1, 1, 1, y - 1) );
+        objects.Add( new Sneke_SM::wall(0, 1, 1, y-1) );
+    }
 }
 
 void Sneke_SM::field::ParseEvent(SDL_Event& event){
@@ -87,7 +109,7 @@ void Sneke_SM::field::ParseEvent(SDL_Event& event){
     }
     if (event.type == SDL_KEYDOWN){
         switch(event.key.keysym.scancode){
-            case SDL_SCANCODE_ESCAPE: game_state = GAMESTATE_PAUSED; break;
+            case SDL_SCANCODE_ESCAPE: game_state = GAMESTATE_PAUSED; std::cout << player.x << " " << player.y << std::endl; break;
 
             case SDL_SCANCODE_DOWN:  if ((dir_new == DIR_NONE)&&(player.movement_dir != DIR_UP)) dir_new = DIR_DOWN; break;
             case SDL_SCANCODE_LEFT:  if ((dir_new == DIR_NONE)&&(player.movement_dir != DIR_RIGHT)) dir_new = DIR_LEFT; break;
@@ -124,7 +146,15 @@ void Sneke_SM::field::Update(){
             case Sneke_SM::COLL_EAT:
                 score += obj->GetValue();
                 player.body.Grow();
-                obj->SetXY( coords_x(randgen), coords_y(randgen) );
+                //obj->SetXY( coords_x(randgen), coords_y(randgen) );
+
+                int i, j;
+                do{
+                    i = coords_x(randgen);
+                    j = coords_y(randgen);
+                } while (objects.getObject(i, j) != NULL);
+                obj->SetXY( i, j );
+
                 break;
             case Sneke_SM::COLL_KILL:
                 game_state = GAMESTATE_FINISHED;
@@ -135,8 +165,11 @@ void Sneke_SM::field::Update(){
 
 void Sneke_SM::field::SpawnTreat(){
     Sneke_SM::fruit* candy = new Sneke_SM::fruit(0, 0);
+    bool test;
+    do{
         candy->SetXY( coords_x(randgen), coords_y(randgen) );
-    objects.Add(candy);
+        test = objects.Add(candy);
+    } while (!test);
     std::cout << "Spawned some candy at (" << candy->GetX() << ";" << candy->GetY() << ")\n";
 }
 

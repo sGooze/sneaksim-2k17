@@ -126,18 +126,18 @@ namespace Sneke_SM{
 
     public:
         //field() : x(0), y(0), player(0, 0){};
-        field(int size_x, int size_y);
+        field(int size_x, int size_y, bool solid_edges = false);
         ~field(){};
 
         void Update();                      // Moves snek, then checks for collision
-        void TimerUpdate(){game_time = SDL_GetTicks() - timestamp_activated;}
+        void TimerUpdate(){/*game_time = SDL_GetTicks() - timestamp_activated;*/}
         void ParseEvent(SDL_Event& event);
         void AddObjectList();
         void SpawnTreat();                  // Temp function for basic candy spawning
         uint16_t GetX(){return x;}
         uint16_t GetY(){return y;}
         uint32_t GetScore(){return score;}
-        uint32_t GetGameTime(){return SDL_GetTicks() - timestamp_activated + game_pause;}
+        uint32_t GetGameTime(){return /*SDL_GetTicks() - timestamp_activated + game_pause*/0;}
 
         field_gamestate GetGameState(){return game_state;}
         void SetGameState(field_gamestate new_state){game_state = new_state; if (game_state == GAMESTATE_ACTIVE) timestamp_activated = SDL_GetTicks();}

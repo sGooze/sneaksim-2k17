@@ -24,6 +24,7 @@ private:
     sneke *playa_obj = NULL;
 
     uint16_t game_speed = 5; // in frames per second
+    bool temp_walls = false;
 
     uint32_t frame_start, gamespeed_last = 0;
      int16_t sleep;
@@ -36,6 +37,8 @@ public:
     void StopGame();        // Set gamefield state as inactive
 
     int MainLoop(); // Read events, process events, tick the field, calculate framerate and wait
+    int InGameLoop();
+    int MainMenuLoop();
 };
 
 extern std::string title;
