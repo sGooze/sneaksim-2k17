@@ -124,7 +124,7 @@ void Sneke_SM::field::Update(){
     // Called once per game update cycle
     static Sneke_SM::object *obj;
     // Move snek's body
-    player.body.Move(player.x, player.y);
+    //player.body.Move(player.x, player.y);
     // Move snek's head
     if (dir_new != DIR_NONE)
         player.movement_dir = dir_new;

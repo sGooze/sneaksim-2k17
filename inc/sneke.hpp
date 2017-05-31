@@ -19,6 +19,12 @@ namespace Sneke_SM{
 
     enum ANIMATION_STYLE    {ANIM_NONE,     // No animation
                             ANIM_SWITCH};   // Switch between colors without transition
+
+    /*/
+    *** CLASS:
+    ***     OBJECT - In-game object
+    /*/
+
     class object{
     protected:
         //uint16_t x, y;
@@ -54,6 +60,10 @@ namespace Sneke_SM{
         uint16_t GetValue(){return value;}
     };
 
+    /*/
+    *** CLASS:
+    ***     OBJECT_LIST - stores and provides interface for adding, retrieving and deleting objects
+    /*/
 
     class object_list{
     private:
@@ -69,12 +79,18 @@ namespace Sneke_SM{
         bool Remove(object* obj);                       // Finds object in the list, removes it and returns TRUE
     };
 
+    /*/
+    *** CLASS:
+    ***     SNEKE - object, representing player
+    /*/
+
     class field;
 
     class sneke{
     private:
         friend class field;
-        uint16_t x, y;
+        float x, y;
+        float velocity_x = 1, velocity_y = 1;
         DIRECTION movement_dir = DIR_LEFT;
         //std::list<DIRECTION> movement_dirs;
 
@@ -107,6 +123,10 @@ namespace Sneke_SM{
         std::list<wall>& GetBody(){return body.body;};
     };
 
+    /*/
+    *** CLASS:
+    ***     FIELD - handles gameplay logic and stores all related objects
+    /*/
 
     enum field_gamestate {GAMESTATE_INACTIVE, GAMESTATE_ACTIVE, GAMESTATE_PAUSED, GAMESTATE_FINISHED};
 

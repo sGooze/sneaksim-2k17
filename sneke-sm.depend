@@ -1,8 +1,8 @@
 # depslib dependency file v1.0
-1495613651 source:d:\codeblocks-16.01-mingw\sneke-sm\main.cpp
+1496851028 source:d:\codeblocks-16.01-mingw\sneke-sm\main.cpp
 	"inc/sdl_app.hpp"
 
-1494930361 d:\codeblocks-16.01-mingw\sneke-sm\inc\common.hpp
+1496851243 d:\codeblocks-16.01-mingw\sneke-sm\inc\common.hpp
 	<iostream>
 	<SDL2/SDL.h>
 	<exception>
@@ -678,16 +678,16 @@
 1494712153 source:d:\dev\our vidya\sneke-sm\render2d.cpp
 	"inc/render2d.hpp"
 
-1495112975 source:d:\codeblocks-16.01-mingw\sneke-sm\render2d.cpp
+1496850986 source:d:\codeblocks-16.01-mingw\sneke-sm\render2d.cpp
 	"inc/render2d.hpp"
 
-1495190432 d:\codeblocks-16.01-mingw\sneke-sm\inc\sdl_app.hpp
+1496847026 d:\codeblocks-16.01-mingw\sneke-sm\inc\sdl_app.hpp
 	<SDL2/SDL.h>
 	"common.hpp"
-	"sneke.hpp"
+	"pawn.hpp"
 	"render2d.hpp"
 
-1495098605 d:\codeblocks-16.01-mingw\sneke-sm\inc\sneke.hpp
+1496241339 d:\codeblocks-16.01-mingw\sneke-sm\inc\sneke.hpp
 	"common.hpp"
 	"render_element.hpp"
 	<list>
@@ -696,12 +696,13 @@
 	<random>
 	<chrono>
 
-1495111381 source:d:\codeblocks-16.01-mingw\sneke-sm\sneke.cpp
+1496850764 source:d:\codeblocks-16.01-mingw\sneke-sm\sneke.cpp
 	"inc/sneke.hpp"
 
-1496146299 d:\codeblocks-16.01-mingw\sneke-sm\inc\render2d.hpp
+1496850724 d:\codeblocks-16.01-mingw\sneke-sm\inc\render2d.hpp
 	"common.hpp"
 	"sneke.hpp"
+	"pawn.hpp"
 
 1493824523 d:\codeblocks-16.01-mingw\sneke-sm\inc\render_element.hpp
 	"common.hpp"
@@ -714,4 +715,11 @@
 1494710554 d:\dev\our vidya\sneke-sm\inc\render2d.hpp
 	"common.hpp"
 	"sneke.hpp"
+
+1496850734 d:\codeblocks-16.01-mingw\sneke-sm\inc\pawn.hpp
+	"common.hpp"
+
+1496850824 source:d:\codeblocks-16.01-mingw\sneke-sm\velocity.cpp
+	"inc/pawn.hpp"
+	"inc/render2d.hpp"
 

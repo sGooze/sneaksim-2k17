@@ -11,7 +11,6 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option use_console_runner="0" />
 				<Compiler>
 					<Add option="-std=c++11" />
 					<Add option="-g" />
@@ -43,12 +42,14 @@
 			<Add option="-Wno-switch" />
 		</Compiler>
 		<Unit filename="inc/common.hpp" />
+		<Unit filename="inc/pawn.hpp" />
 		<Unit filename="inc/render2d.hpp" />
 		<Unit filename="inc/sdl_app.hpp" />
 		<Unit filename="inc/sneke.hpp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="render2d.cpp" />
 		<Unit filename="sneke.cpp" />
+		<Unit filename="velocity.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

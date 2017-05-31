@@ -4,33 +4,7 @@
 
 #include "common.hpp"
 #include "sneke.hpp"
-/*
-class Texture{
-private:
-    SDL_Texture *tex = NULL;
-    string path;
-    uint16_t x, y;
-    // uint8_t alpha_mod;
-    // SDL_BlendMode blend_mode;                            All accessed through SDL_Get.. & SDL_Set.. functions, not stored in this class
-    // uint8_t color_mod_r, color_mod_g, color_mod_b;
-public:
-    Texture(const std::string& path);
-    Texture(uint32_t format, int access, int w, int h);
-    ~Texture(){SDL_DestroyTexture(tex);}
-    bool Load();
-    bool Unload();
-    SDL_Texture* GetTexturePtr() {return tex;};
-};
-
-class TextureArray{
-
-public:
-    TextureArray(){};
-
-    bool Add(const std::string& name);          // Loads new texture from the list. Throws a warning and loads default placeholder on failure.
-    Texture& Get(const std::string& name);      // Returns texture from the list. If it's not loaded, loads it first.
-};
-*/
+#include "pawn.hpp"
 
 #define APPEND_STRING 65535
 
@@ -44,7 +18,7 @@ private:
     uint16_t w, h;
     bool borderless = false;
     bool fullscreen = false;
-    std::string win_title = "Sneak";
+    std::string win_title = "Sneak 2: Sneak Harder";
     // dll
     uint8_t scale = 7;
     SDL_Rect viewport_field;
@@ -88,8 +62,8 @@ public:
     void RenderFillRect(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
     void RenderString(const std::string& str, uint16_t start_x = APPEND_STRING, uint16_t start_y = APPEND_STRING);
 
-    // Drawing functions for game objects
-    void RenderObject(Sneke_SM::object* obj);
-    void RenderSneak(Sneke_SM::sneke* sneak);
+    //void RenderDrawPawn()
 
+    // Drawing functions for game objects
+    void RenderBasicPawn(BasicPawn* pawn);
 };

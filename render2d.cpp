@@ -134,21 +134,15 @@ void Render2D::RenderString(const std::string& str, uint16_t start_x, uint16_t s
 // R E N D E R // G A M E  // O B J E C T S  //
 // // // // // // // // // // // // // // // //
 
-void Render2D::RenderObject(Sneke_SM::object* obj){
-    //std::cout << "(" << obj->GetX() << ";" << obj->GetY() << ")\n";
-    SDL_Color& col = obj->GetColor();
-    SDL_SetRenderDrawColor(renderer, col.r, col.g, col.b, col.a);
-    SDL_RenderFillRect(renderer, &obj->GetBBox());
-}
-
-void Render2D::RenderSneak(Sneke_SM::sneke* sneak){
-    // Get objlist vector and iterate through it
-    std::list<Sneke_SM::wall>& body = sneak->GetBody();
-    for (Sneke_SM::wall& piece : body){
-        RenderObject(&piece);
-    }
-    SDL_SetRenderDrawColor(renderer, 0xFF, 0, 0, 0xFF);
-    RenderDrawPoint(sneak->GetX(), sneak->GetY());
+void Render2D::RenderBasicPawn(BasicPawn* pawn){
+    static SDL_Rect temp_rect = {0, 0, 5, 5};
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    vec3& pos = pawn->GetPosition();
+    temp_rect.x = pos.x - 2;
+    temp_rect.y = pos.y - 2;
+    SDL_RenderDrawRect(renderer, &temp_rect);
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0xBB, 0x00, 0xFF);
+    SDL_RenderDrawPoint(renderer, pos.x, pos.y);
 }
 
 // // // // // // // // // // // // // // //
@@ -157,39 +151,15 @@ void Render2D::RenderSneak(Sneke_SM::sneke* sneak){
 
 void Render2D::RenderStart(){
     // Clear rendering space
-    SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0x00, 0xFF);
+    //SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0x00, 0xFF);
+    SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
     SDL_RenderClear(renderer);
-}
-
-void Render2D::RenderField(std::list<Sneke_SM::object*>* objects, Sneke_SM::sneke* player){
-    // First, render field texture
-    if (texField != NULL){
-        if (!(SDL_SetRenderTarget(renderer, texField))){
-            //SDL_RenderSetScale(renderer, scale, 1);
-            SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
-            SDL_RenderClear(renderer);
-            // Render all objects to the field texture
-            if (objects != NULL){
-                // Get objlist vector and iterate through it
-                for (auto it = objects->begin(); it != objects->end(); it++){
-                    RenderObject(*it);
-                }
-            }
-
-            if (player != NULL)
-                RenderSneak(player);
-            SDL_SetRenderTarget(renderer, NULL);
-            //SDL_RenderSetViewport(renderer, &viewport_field);
-            SDL_RenderSetScale(renderer, 1, 1);
-            SDL_RenderCopy(renderer, texField, NULL, &viewport_field);
-        }
-    }
 }
 
 void Render2D::RenderHUD(Sneke_SM::field* gamefield){
     //static Sneke_SM::sneke *sneak = gamefield->GetPlayerObjectPtr();
     // Render HUD
-    SDL_RenderSetViewport(renderer, &viewport_hud);
+    /*SDL_RenderSetViewport(renderer, &viewport_hud);
     SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0xFF, 0xFF);
     RenderFillRect(0, 0, 640, 32);
     RenderString("Time: " + patch::to_string(gamefield->GetGameTime() / 1000), 0, 0);
@@ -199,7 +169,7 @@ void Render2D::RenderHUD(Sneke_SM::field* gamefield){
     if (gamefield->GetGameState() == Sneke_SM::GAMESTATE_FINISHED){
         RenderString("GAME     OVER!\n Your score:" + patch::to_string(gamefield->GetScore()), 128, 128);
         RenderString("Press R to restart the game", 128, 200);
-    }
+    }*/
 }
 
 void Render2D::RenderEnd(){
