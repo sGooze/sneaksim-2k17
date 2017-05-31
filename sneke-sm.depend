@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1495112617 source:d:\codeblocks-16.01-mingw\sneke-sm\main.cpp
+1495613651 source:d:\codeblocks-16.01-mingw\sneke-sm\main.cpp
 	"inc/sdl_app.hpp"
 
 1494930361 d:\codeblocks-16.01-mingw\sneke-sm\inc\common.hpp
@@ -681,7 +681,7 @@
 1495112975 source:d:\codeblocks-16.01-mingw\sneke-sm\render2d.cpp
 	"inc/render2d.hpp"
 
-1495111596 d:\codeblocks-16.01-mingw\sneke-sm\inc\sdl_app.hpp
+1495190432 d:\codeblocks-16.01-mingw\sneke-sm\inc\sdl_app.hpp
 	<SDL2/SDL.h>
 	"common.hpp"
 	"sneke.hpp"
@@ -699,7 +699,7 @@
 1495111381 source:d:\codeblocks-16.01-mingw\sneke-sm\sneke.cpp
 	"inc/sneke.hpp"
 
-1495112880 d:\codeblocks-16.01-mingw\sneke-sm\inc\render2d.hpp
+1496146299 d:\codeblocks-16.01-mingw\sneke-sm\inc\render2d.hpp
 	"common.hpp"
 	"sneke.hpp"
 

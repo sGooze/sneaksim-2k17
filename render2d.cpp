@@ -50,7 +50,7 @@ void Render2D::InitFieldTexture(uint16_t fx, uint16_t fy){
     //texField = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB24, SDL_TEXTUREACCESS_TARGET, fx * scale, fy * scale);
     texField = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB24, SDL_TEXTUREACCESS_TARGET, fx, fy );
     if (texField == NULL){
-        std::cout << "Render2D::InitFieldTexture - an error as occurred: " << SDL_GetError() << std::endl;
+        std::cout << "Render2D::InitFieldTexture - an error has occurred: " << SDL_GetError() << std::endl;
         return;
     }
 
@@ -67,7 +67,7 @@ void Render2D::InitFontTexture(){
     // TODO: Define font size based on texture proportions
     SDL_Surface *suf = SDL_LoadBMP("font.bmp");
     if (suf == NULL)
-        throw std::runtime_error("Render2D::InitFontTexture - unable to find font file\n");
+        throw std::runtime_error("Render2D::InitFontTexture - unable to find font file (font.bmp)\n");
     texFont = SDL_CreateTextureFromSurface(renderer, suf);
     if (texFont == NULL)
         throw std::runtime_error("Render2D::InitFontTexture - unable to create font texture\n");

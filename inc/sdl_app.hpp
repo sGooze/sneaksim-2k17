@@ -36,6 +36,9 @@ public:
     void StartGame();       // Init gamefield
     void StopGame();        // Set gamefield state as inactive
 
+    void StartFrame(){frame_start = SDL_GetTicks();};
+    void EndFrame(){render.RenderEnd(); sleep = frame_start + frame_ms - SDL_GetTicks(); if (sleep < 0) sleep = 0; SDL_Delay(sleep);};
+
     int MainLoop(); // Read events, process events, tick the field, calculate framerate and wait
     int InGameLoop();
     int MainMenuLoop();

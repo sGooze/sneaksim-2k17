@@ -33,8 +33,8 @@ void GameWrapper::PollEvents(){
     while (SDL_PollEvent(&event)){
         switch (event.type){
         case SDL_WINDOWEVENT:
-            if ((event.window.event == SDL_WINDOWEVENT_FOCUS_LOST)&&(gamefield->GetGameState() == GAMESTATE_ACTIVE))
-                gamefield->SetGameState(GAMESTATE_PAUSED);
+            /*if ((event.window.event == SDL_WINDOWEVENT_FOCUS_LOST)&&(gamefield->GetGameState() == GAMESTATE_ACTIVE))
+                gamefield->SetGameState(GAMESTATE_PAUSED);*/
             break;
         case SDL_KEYDOWN:
             if ((event.key.keysym.scancode == SDL_SCANCODE_KP_PLUS)||(event.key.keysym.scancode == SDL_SCANCODE_KP_MINUS)){
@@ -77,8 +77,7 @@ int GameWrapper::MainMenuLoop(){
     // PLACEHOLDER!
     static SDL_Event event;
     while (valid){
-        // StartFrame()
-        frame_start = SDL_GetTicks();
+        StartFrame();
 
         while (SDL_PollEvent(&event)){
             switch (event.type){
@@ -107,19 +106,17 @@ int GameWrapper::MainMenuLoop(){
 
         render.RenderString("WELCOME TO", 0, 10);
         render.RenderString("\nS N E K  S I M U L A T O R  2 0 1 7");
-        render.RenderString("\n\n\n +/-: In-game speed: ");
+        render.RenderString("\n\n\nSetup:");
+        render.RenderString("\n\n +/-: In-game speed: ");
         render.RenderString(patch::to_string(game_speed));
         render.RenderString("\n   W: Solid walls: ");
         render.RenderString(patch::to_string(temp_walls));
+        render.RenderString("\n\n\nIn-game:");
         render.RenderString("\n\n F10: Exit");
-        render.RenderString("\n\n Press any other key to start");
+        render.RenderString("\n\nUse arrow keys to steer");
+        render.RenderString("\n\n\n Press any other key to start");
 
-        // EndFrame()
-        render.RenderEnd();
-        sleep = frame_start + frame_ms - SDL_GetTicks();
-        if (sleep < 0)
-            sleep = 0;
-        SDL_Delay(sleep);
+        EndFrame();
     }
     return 0;
 }
@@ -128,7 +125,7 @@ int GameWrapper::InGameLoop(){
     StartGame();
     // Fixed time step is used since the game should be so simple that anything but microwavers should be able to run it at 30/60FPS
     while (valid){
-        frame_start = SDL_GetTicks();
+        StartFrame();
         PollEvents();       // Get events and send them to event handlers
         render.RenderStart();
 
@@ -143,12 +140,7 @@ int GameWrapper::InGameLoop(){
         render.RenderHUD(gamefield);
         if (gamefield->GetGameState() == GAMESTATE_PAUSED)
             render.RenderString("Paused!", 128, 128);
-        render.RenderEnd();
-
-        sleep = frame_start + frame_ms - SDL_GetTicks();
-        if (sleep < 0)
-            sleep = 0;
-        SDL_Delay(sleep);
+        EndFrame();
     }
     return 0;
 }
