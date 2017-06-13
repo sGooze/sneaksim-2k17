@@ -1,13 +1,14 @@
 # depslib dependency file v1.0
-1496851028 source:d:\codeblocks-16.01-mingw\sneke-sm\main.cpp
+1497366163 source:d:\codeblocks-16.01-mingw\sneke-sm\main.cpp
 	"inc/sdl_app.hpp"
 
-1496851243 d:\codeblocks-16.01-mingw\sneke-sm\inc\common.hpp
+1497619036 d:\codeblocks-16.01-mingw\sneke-sm\inc\common.hpp
 	<iostream>
 	<SDL2/SDL.h>
 	<exception>
 	<stdexcept>
 	<sstream>
+	<vector>
 
 1476935894 d:\codeblocks-16.01-mingw\sneke-sm\lib\sdl2\include\sdl2\sdl.h
 	"SDL_main.h"
@@ -678,29 +679,30 @@
 1494712153 source:d:\dev\our vidya\sneke-sm\render2d.cpp
 	"inc/render2d.hpp"
 
-1496850986 source:d:\codeblocks-16.01-mingw\sneke-sm\render2d.cpp
+1496925061 source:d:\codeblocks-16.01-mingw\sneke-sm\render2d.cpp
 	"inc/render2d.hpp"
 
-1496847026 d:\codeblocks-16.01-mingw\sneke-sm\inc\sdl_app.hpp
+1496921746 d:\codeblocks-16.01-mingw\sneke-sm\inc\sdl_app.hpp
 	<SDL2/SDL.h>
 	"common.hpp"
 	"pawn.hpp"
 	"render2d.hpp"
+	"input_handler.hpp"
 
-1496241339 d:\codeblocks-16.01-mingw\sneke-sm\inc\sneke.hpp
+1497619054 d:\codeblocks-16.01-mingw\sneke-sm\inc\sneke.hpp
 	"common.hpp"
 	"render_element.hpp"
 	<list>
 	<forward_list>
-	<vector>
 	<random>
 	<chrono>
 
 1496850764 source:d:\codeblocks-16.01-mingw\sneke-sm\sneke.cpp
 	"inc/sneke.hpp"
 
-1496850724 d:\codeblocks-16.01-mingw\sneke-sm\inc\render2d.hpp
+1497619241 d:\codeblocks-16.01-mingw\sneke-sm\inc\render2d.hpp
 	"common.hpp"
+	"msgserver.hpp"
 	"sneke.hpp"
 	"pawn.hpp"
 
@@ -716,10 +718,20 @@
 	"common.hpp"
 	"sneke.hpp"
 
-1496850734 d:\codeblocks-16.01-mingw\sneke-sm\inc\pawn.hpp
+1496924432 d:\codeblocks-16.01-mingw\sneke-sm\inc\pawn.hpp
 	"common.hpp"
+	"input_handler.hpp"
 
-1496850824 source:d:\codeblocks-16.01-mingw\sneke-sm\velocity.cpp
+1496925663 source:d:\codeblocks-16.01-mingw\sneke-sm\velocity.cpp
 	"inc/pawn.hpp"
 	"inc/render2d.hpp"
+
+1496921898 d:\codeblocks-16.01-mingw\sneke-sm\inc\input_handler.hpp
+	"common.hpp"
+
+1497619251 d:\codeblocks-16.01-mingw\sneke-sm\inc\msgserver.hpp
+	"common.hpp"
+	"eng_message.hpp"
+
+1497618988 d:\codeblocks-16.01-mingw\sneke-sm\inc\eng_message.hpp
 

@@ -7,7 +7,6 @@
 #include "render_element.hpp"
 #include <list>
 #include <forward_list>
-#include <vector>
 #include <random>
 #include <chrono>
 

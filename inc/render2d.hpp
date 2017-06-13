@@ -3,6 +3,7 @@
 #pragma once
 
 #include "common.hpp"
+#include "msgserver.hpp"
 #include "sneke.hpp"
 #include "pawn.hpp"
 
@@ -10,7 +11,18 @@
 
 // TODO: Base Render class defined in the engine; custom renderers inside dlls are derived from it
 
-class Render2D{
+class BitmapFont{
+private:
+    SDL_Texture* texFont;
+    uint8_t sizeX, sizeY;
+public:
+    BitmapFont(std::string& filename);
+    ~BitmapFont(){SDL_DestroyTexture(texFont);}
+    uint8_t GetSizeX(){return sizeX;}
+    uint8_t GetSizeY(){return sizeY;}
+};
+
+class Render2D : public SubsystemBase{
 private:
     // engine
     SDL_Renderer *renderer = NULL;
@@ -29,6 +41,7 @@ public:
     Render2D();
     ~Render2D();
     Render2D(uint16_t win_width, uint16_t win_height, bool accelerated = true); // Uses reset(), throws fatal exception on fail
+    void GetMessage(MessageBase *msg){/*TEMP*/};
     // dll
     void Reset(bool recreate = false);       // Recreate window and renderer with new parameters
     void InitFieldTexture(uint16_t fx, uint16_t fy);
@@ -66,4 +79,5 @@ public:
 
     // Drawing functions for game objects
     void RenderBasicPawn(BasicPawn* pawn);
+    void RenderPlayerPawn(PlayerPawn* pawn);
 };

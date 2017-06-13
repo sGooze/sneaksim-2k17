@@ -1,6 +1,37 @@
 #include "inc/render2d.hpp"
+#include <cstdlib>
 
 std::string title = "Sneak Simulator 2017";
+
+// // // // // // // // // // // // // // // // //
+//    F     //    O     //    N     //    T     //
+// // // // // // // // // // // // // // // // //
+
+BitmapFont::BitmapFont(std::string& filename){
+    // Font size is assumed to be specified in the file name [filename format MUST be "font-WxH.bmp"]
+    // Font size is extracted from file name
+    size_t delim_pos = filename.find('x');
+    if ((filename.substr(0, 5) != "font-")||(delim_pos == std::string::npos))
+        throw std::runtime_error("BitmapFont::BitmapFont - improper filename format: must be \"font-WxH.bmp\"\n");
+    sizeX = std::stoi(filename.substr( 5, delim_pos - 5 ));
+    sizeY = std::stoi(filename.substr(delim_pos + 1, filename.find('.') - delim_pos));
+    // Basic check is done with comparison of the specified height and the actual texture's height
+    SDL_Surface *suf = SDL_LoadBMP(filename.c_str());
+    if (suf == NULL)
+        throw std::runtime_error("BitmapFont::BitmapFont - unable to find font file (font.bmp)\n");
+    texFont = SDL_CreateTextureFromSurface(renderer, suf);
+    if (texFont == NULL)
+        throw std::runtime_error("BitmapFont::BitmapFont - unable to concert font surface to font texture\n");
+    int sizeY_queried; SDL_QueryTexture(texFont, NULL, NULL, NULL, &sizeY_queried);
+    if (sizeY != sizeY_queried)
+        std::cout << "BitmapFont::BitmapFont - warning: height of the texture " << filename << "(" << sizeY_queried << ") does not match the height specified in the filename (" << sizeY << ")"
+            << ". This may cause rendering artifacts to appear.\n";
+}
+
+
+// // // // // // // // // // // // // //
+// R E N D E R //    2     //    D     //
+// // // // // // // // // // // // // //
 
 Render2D::Render2D(){
     //Reset();
@@ -143,6 +174,16 @@ void Render2D::RenderBasicPawn(BasicPawn* pawn){
     SDL_RenderDrawRect(renderer, &temp_rect);
     SDL_SetRenderDrawColor(renderer, 0xFF, 0xBB, 0x00, 0xFF);
     SDL_RenderDrawPoint(renderer, pos.x, pos.y);
+}
+
+void Render2D::RenderPlayerPawn(PlayerPawn* pawn){
+    RenderBasicPawn(pawn);
+    vec3& pos = pawn->GetPosition();
+    vec3& cross = pawn->GetCrosshair();
+    if (cross.z > 0){
+        SDL_RenderDrawLine(renderer, (int)pos.x, (int)pos.y, (int)cross.x, (int)cross.y);
+        cross.z--;
+    }
 }
 
 // // // // // // // // // // // // // // //

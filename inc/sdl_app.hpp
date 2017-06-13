@@ -7,8 +7,7 @@
 #include "common.hpp"
 #include "pawn.hpp"
 #include "render2d.hpp"
-
-using namespace Sneke_SM;
+#include "input_handler.hpp"
 
 #define FPS_MAX 30.0
 #define TIMING_DESIRED (double)(1000.0 / (double) FPS_MAX )

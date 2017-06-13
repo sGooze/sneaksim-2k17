@@ -1,10 +1,7 @@
 #include "inc/sdl_app.hpp"
 
-/*
-    VELOCITY SNEK
-*/
-
-using namespace Sneke_SM;
+KeyboardState kbState;
+MsgServer msgserver;
 
 bool GameWrapper::InitSDL(){
     if (SDL_Init(SDL_INIT_VIDEO)){
@@ -41,10 +38,11 @@ void GameWrapper::PollEvents(){
                 gamefield->SetGameState(GAMESTATE_PAUSED);
             break;*/
         case SDL_KEYDOWN:
+        case SDL_KEYUP:
             // TODO: Keydown/keyup events update keyboard object state; pressed keys are then passed to necessary objects
             if ((event.key.keysym.scancode == SDL_SCANCODE_F10))
                 valid = false;
-            pcon.ParseEvent(event);
+            kbState.SetButtonState( event.key.keysym.scancode, (event.type == SDL_KEYDOWN) );
             break;
         case SDL_QUIT:
             valid = false;
@@ -54,7 +52,7 @@ void GameWrapper::PollEvents(){
 }
 
 void GameWrapper::StartGame(){
-    pcon.SetPawnPtr(new BasicPawn( vec3(), vec3() ));
+    pcon.SetPawnPtr(new PlayerPawn( vec3(), vec3() ));
 }
 
 void GameWrapper::StopGame(){
@@ -85,22 +83,19 @@ int GameWrapper::MainMenuLoop(){
 
 int GameWrapper::InGameLoop(){
     StartGame();
-    // Fixed time step is used since the game should be so simple that anything but microwavers should be able to run it at 30/60FPS
-    BasicPawn *player_pawn = pcon.GetPawnPtr();
+    PlayerPawn *player_pawn = pcon.GetPawnPtr();
     if (player_pawn == NULL)
         valid = false;
-    double gamespeed_multiplier = 1.0 / FPS_MAX;
+    // TODO: timing = frametime_desired / frametime_current
     while (valid){
         StartFrame();
         PollEvents();       // Get events and send them to event handlers
         render.RenderStart();
 
-        player_pawn->Move(gamespeed_multiplier); // Update field state
+        pcon.SetPlayerInputToPawn();
+        //player_pawn->Move(frame_ms); // Update field state
 
-        render.RenderBasicPawn(player_pawn);    // Render field and HUD
-        /*render.RenderHUD(gamefield);
-        if (gamefield->GetGameState() == GAMESTATE_PAUSED)
-            render.RenderString("Paused!", 128, 128);*/
+        render.RenderPlayerPawn(player_pawn);    // Render field and HUD
         EndFrame();
     }
     return 0;

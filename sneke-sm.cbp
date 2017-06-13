@@ -42,6 +42,9 @@
 			<Add option="-Wno-switch" />
 		</Compiler>
 		<Unit filename="inc/common.hpp" />
+		<Unit filename="inc/eng_message.hpp" />
+		<Unit filename="inc/input_handler.hpp" />
+		<Unit filename="inc/msgserver.hpp" />
 		<Unit filename="inc/pawn.hpp" />
 		<Unit filename="inc/render2d.hpp" />
 		<Unit filename="inc/sdl_app.hpp" />

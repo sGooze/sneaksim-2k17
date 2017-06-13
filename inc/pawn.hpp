@@ -3,6 +3,7 @@
 #pragma once
 
 #include "common.hpp"
+#include "input_handler.hpp"
 
 //***************************************
 // Class: BasicPawn *********************
@@ -30,6 +31,21 @@ public:
 };
 
 //***************************************
+// Class: PlayerPawn ********************
+//***************************************
+// Description:
+//  Pawn representing player. Can shoot
+//***************************************
+
+class PlayerPawn : public BasicPawn{
+    vec3 crosshair;
+public:
+    PlayerPawn(vec3 position, vec3 velocity) : BasicPawn(position, velocity){};
+    void ShootBullet();
+    vec3& GetCrosshair(){return crosshair;}
+};
+
+//***************************************
 // Class: PlayerController **************
 //***************************************
 // Description:
@@ -39,10 +55,11 @@ public:
 //***************************************
 
 class PlayerController{
-    BasicPawn *player_pawn;
+    PlayerPawn *player_pawn;
 public:
-    PlayerController(BasicPawn *player = NULL) : player_pawn(player) {};
+    PlayerController(PlayerPawn *player = NULL) : player_pawn(player) {};
     bool ParseEvent(SDL_Event& event);
-    bool SetPawnPtr(BasicPawn *new_player){if (player_pawn != NULL) delete player_pawn; player_pawn = new_player; return true;}
-    BasicPawn *GetPawnPtr(){return player_pawn;};
+    bool SetPlayerInputToPawn();            // Queries input devices's state and
+    bool SetPawnPtr(PlayerPawn *new_player){if (player_pawn != NULL) delete player_pawn; player_pawn = new_player; return true;}
+    PlayerPawn *GetPawnPtr(){return player_pawn;};
 };

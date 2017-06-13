@@ -10,6 +10,7 @@
 #include <stdexcept>
 
 #include <sstream>
+#include <vector>
 
 
 namespace patch
